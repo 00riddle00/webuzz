@@ -1,0 +1,4 @@
+A visitor who chose to call himself {{ visitor_name }} has shown interest in
+signing up to {{ config["APP_NAME"] }}!
+
+Note: replies to this email address are not monitored.

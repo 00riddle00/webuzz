@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% import "_macros.html" as macros %}
+
+{% block subtitle %}Comment Moderation{% endblock %}
+
+{% block page_header_name %}Comment Moderation{% endblock %}
+
+{% block page_main_content %}
+{% set moderate = True %}
+{% include "_comments.html" %}
+{% if pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, ".moderate") }}
+    </div>
+{% endif %}
+{% endblock %}
