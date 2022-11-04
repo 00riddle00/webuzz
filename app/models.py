@@ -244,9 +244,7 @@ class User(UserMixin, db.Model):
     def gravatar(self, size=100, default="identicon", rating="g"):
         url = "https://secure.gravatar.com/avatar"
         hash = self.avatar_hash or self.gravatar_hash()
-        return "{url}/{hash}?s={size}&d={default}&r={rating}".format(
-            url=url, hash=hash, size=size, default=default, rating=rating
-        )
+        return f"{url}/{hash}?s={size}&d={default}&r={rating}"
 
     def follow(self, user):
         if not self.is_following(user):
