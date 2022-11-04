@@ -104,6 +104,11 @@ def hello(name=None):
     '/hello/' and '/hello/<name>' routes being accessible via 'GET' and
     'POST' requests.
     """
+
+    # This page is only for non logged-in visitors
+    if current_user.is_authenticated:
+        abort(404)
+
     # Context will be passed to the template for rendering
     context = {}
 
