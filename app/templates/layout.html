@@ -15,7 +15,7 @@
 
                     {{ render_nav_item("main.about", "About") }}
                     {% if current_user.is_anonymous %}
-                        {{ render_nav_item("main.greeting", "Say hello!") }}
+                        {{ render_nav_item("main.hello", "Say hello!") }}
                     {% endif %}
                 </div>
                 <div class="navbar-nav ms-auto">
