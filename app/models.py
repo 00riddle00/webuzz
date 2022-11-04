@@ -37,7 +37,7 @@ class Role(db.Model):
     users = db.relationship("User", backref="role", lazy="dynamic")
 
     def __init__(self, **kwargs):
-        super(Role, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if self.permissions is None:
             self.permissions = 0
 
@@ -147,7 +147,7 @@ class User(UserMixin, db.Model):
                 db.session.commit()
 
     def __init__(self, **kwargs):
-        super(User, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         if self.role is None:
             if self.email == current_app.config["ADMIN_EMAIL"]:
                 self.role = Role.query.filter_by(name="Administrator").first()
