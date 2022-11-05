@@ -56,8 +56,11 @@ def make_shell_context():
 def test(coverage, test_names):
     """Run the unit tests."""
     if coverage and not os.environ.get("FLASK_COVERAGE"):
+        import subprocess
+
         os.environ["FLASK_COVERAGE"] = "1"
-        os.execvp(sys.executable, [sys.executable] + sys.argv)
+        sys.exit(subprocess.call(sys.argv))
+
     import unittest
 
     if test_names:
