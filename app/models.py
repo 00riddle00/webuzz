@@ -163,6 +163,11 @@ class User(UserMixin, db.Model):
 
     @password.setter
     def password(self, password):
+        passwd_min_len = current_app.config["PASSWORD_MIN_LENGTH"]
+        if len(password) < passwd_min_len:
+            raise AttributeError(
+                f"Password minimum length should be at least {passwd_min_len} characters"
+            )
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
