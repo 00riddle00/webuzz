@@ -1,6 +1,6 @@
 ![App logo](app/static/img/app_logo_for_readme.png)
 
-# Social blogging application.
+# WeBuzz - a blogging app.
 
 ## Installation
 
@@ -34,7 +34,7 @@ pip install -r requirements.txt
 ##### [1] Set the environment variables:
 
 ```Shell
-export FLASK_APP=social_blogging_app
+export FLASK_APP=webuzz
 export FLASK_DEBUG=1
 ```
 
@@ -44,7 +44,7 @@ flask run
 ```
 ##### Alternative without setting environment variables:
 ```Shell
-flask --app social_blogging_app --debug run
+flask --app webuzz --debug run
 ```
 
 ## Software dependencies
