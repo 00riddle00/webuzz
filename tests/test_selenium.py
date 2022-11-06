@@ -90,7 +90,7 @@ class SeleniumTestCase(unittest.TestCase):
         )
 
         # navigate to login page
-        self.client.find_element("link text", "LOG IN").click()
+        self.client.find_element("xpath", "//a[contains(text(), 'Log in')]").click()
         self.assertIn("<h1>Login</h1>", self.client.page_source)
 
         # login
@@ -100,5 +100,5 @@ class SeleniumTestCase(unittest.TestCase):
         self.assertTrue(re.search("Hello,\s+4dministrator!", self.client.page_source))
 
         # navigate to the user's profile page
-        self.client.find_element("link text", "PROFILE").click()
+        self.client.find_element("xpath", "//a[contains(text(), 'Profile')]").click()
         self.assertIn("<h1>4dministrator</h1>", self.client.page_source)
