@@ -34,6 +34,7 @@ class Config:
     MAIL_SENDER_EMAIL = os.environ.get("MAIL_SENDER_EMAIL")
     MAIL_SENDER = f"{APP_NAME} HQ <{MAIL_SENDER_EMAIL}>"
     ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
+    SSL_REDIRECT = False
     POSTS_PER_PAGE = 20
     COMMENTS_PER_PAGE = 30
     FOLLOWERS_PER_PAGE = 50
@@ -120,6 +121,8 @@ class UnixConfig(ProductionConfig):
 
 
 class HerokuConfig(ProductionConfig):
+    SSL_REDIRECT = True if os.environ.get('DYNO') else False
+
     @classmethod
     def init_app(cls, app):
         ProductionConfig.init_app(app)
