@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block subtitle %}About{% endblock %}
+
+{% block page_header %}{% endblock %}
+
+{% block page_main_content %}
+<p>
+    <span style="font-size: 16pt; font-weight: 500;">Life;</span> it's literally
+    <span style="font-size: larger;">all</span> we have. But is it any good
+    <span>?</span>
+    <br>
+    <br>
+    This is a blogging site, but it doesn't blog about food, books or movies; it
+    contains blogs about life itself.
+    <br>
+    <br>
+    Whatever life experience you're curious about, our user community will try
+    to do it, and then to blog about it.
+    <br>
+    If we do this right, we'll shed new light on what it means to be alive.
+</p>
+<br>
+<h3>And we'd better do it right.</h3>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{url_for('static', filename='js/about.js')}}"></script>
+{% endblock %}

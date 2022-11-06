@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% import "_macros.html" as macros %}
+
+{% block title %}{{ config["APP_NAME"] }}{% endblock %}
+
+{% block page_header_name %}Latest blog posts{% endblock %}
+
+{% block page_main_content %}
+{% if current_user.is_authenticated %}
+    <h1>Hello, {{ current_user.username }}!</h1>
+    <h4>You are now logged in.</h4>
+{% else %}
+    <h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1>
+
+    {% if not known %}
+        <p>Pleased to meet you!</p>
+    {% else %}
+        <p>Happy to see you again!</p>
+    {% endif %}
+
+    {% if form %}
+        {{ macros.render_col_form(form) }}
+        <br>
+    {% endif %}
+{% endif %}
+<div>
+    {% if current_user.can(Permission.WRITE) %}
+        {{ macros.render_col_form(form) }}
+    {% endif %}
+</div>
+<div class="post-tabs">
+    <ul class="nav nav-tabs">
+        <li{% if not show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_all') }}">All</a></li>
+        {% if current_user.is_authenticated %}
+            <li{% if show_followed %} class="active"{% endif %}><a href="{{ url_for('.show_followed') }}">Followed</a></li>
+        {% endif %}
+    </ul>
+    {% include '_posts.html' %}
+</div>
+{% if pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, ".index") }}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ pagedown.include_pagedown() }}
+{% endblock %}

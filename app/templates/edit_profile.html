@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% import "_macros.html" as macros %}
+
+{% block subtitle %}Edit Profile{% endblock %}
+
+{% block page_header_name %}Edit Your Profile{% endblock %}
+
+{% block page_main_content %}
+{{ macros.render_col_form(form) }}
+{% endblock %}

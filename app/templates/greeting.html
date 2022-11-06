@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% import "_macros.html" as macros %}
+
+{% block subtitle %}Welcome!{% endblock %}
+
+{% block page_header_name %}
+    Hello, {% if name %}{{ name|capitalize }}{% else %}Stranger{% endif %}!
+{% endblock %}
+
+{% block page_main_content %}
+{% if form %}
+    {{ macros.render_col_form(form) }}
+    <br>
+{% endif %}
+
+{% if form and session["form_was_submitted"] %}
+    <div style="float: right; margin-top: -60px;">
+        <form action="{{ url_for('main.greeting', name=session['name']) }}" method="post">
+            <button style="padding: 0; border: none; background: none; text-decoration-line: none;" type="submit" name="clear_form" value="submit" class="btn-link">
+            Get this form out of my face and treat me as a normal user!
+            </button>
+        </form>
+    </div>
+{% endif %}
+
+{% if name %}
+    {% if greeting_msgs %}
+        <p>Welcome! {{ greeting_msgs["day"] }}</p>
+    {% endif %}
+
+    {% if current_time %}
+        <p>
+            Your local date and time is: <strong>{{ moment(current_time).format("LLL") }}</strong>
+            <br>
+            (That was {{ moment(current_time).fromNow(refresh=True) }})
+        </p>
+    {% endif %}
+
+    {% if temperatures %}
+        <p>Today's temperature is: {{ temperatures[0] }} °C</p>
+    {% endif %}
+
+    {% if funny_msgs %}
+        <h6>Funny messages for you:</h6>
+        <ul>
+        {% for msg in funny_msgs %}
+            <li>{{ msg|capitalize }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if visitor_engaged %}
+        <div class="alert alert-info">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            We appreciate your eagerness!
+            <br>
+            <br>
+            You can elevate your privileges by becoming a
+            <a style="text-decoration: none;" href="{{ url_for('auth.register') }}">registered user</a>,
+            just like you've always wanted!
+        </div>
+    {% endif %}
+{% endif %}
+{% endblock %}

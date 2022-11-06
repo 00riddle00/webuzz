@@ -1,0 +1,15 @@
+-r common.txt
+certifi==2022.9.24
+charset-normalizer==2.1.1
+commonmark==0.9.1
+defusedxml==0.7.1
+Faker==15.1.1
+httpie==3.2.1
+multidict==6.0.2
+Pygments==2.13.0
+PySocks==1.7.1
+python-dateutil==2.8.2
+requests==2.28.1
+requests-toolbelt==0.10.1
+rich==12.6.0
+urllib3==1.26.12
