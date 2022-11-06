@@ -147,6 +147,7 @@ config = {
     "development": DevelopmentConfig,
     "testing": TestingConfig,
     "production": ProductionConfig,
+    'heroku': HerokuConfig,
     "docker": DockerConfig,
     "unix": UnixConfig,
     "default": DevelopmentConfig,
