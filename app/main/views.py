@@ -27,15 +27,22 @@ from .forms import (
     PostForm,
 )
 
+
 @main.after_app_request
 def after_request(response):
     for query in get_debug_queries():
-        if query.durattion >= current_app.connfig['SLOW_DB_QUERY_TIME']:
+        if query.duration >= current_app.config["SLOW_DB_QUERY_TIME"]:
             current_app.logger.warning(
-                'Slow query: %s\nParameters: %s\nDuration: %fs\nContext: %s\n' %
-                    (query.statement, query.parameters, query.duration, query.context))
+                "Slow query: %s\nParameters: %s\nDuration: %fs\nContext: %s\n"
+                % (
+                    query.statement,
+                    query.parameters,
+                    query.duration,
+                    query.context,
+                )
+            )
     return response
-    
+
 
 @main.route("/", methods=["GET", "POST"])
 def index():
@@ -80,27 +87,32 @@ def about():
     return render_template("about.html")
 
 
-@main.route("/greeting/", methods=["GET", "POST"])
-@main.route("/greeting/<name>", methods=["GET", "POST"])
-def greeting(name=None):
+@main.route("/hello/", methods=["GET", "POST"])
+@main.route("/hello/<name>", methods=["GET", "POST"])
+def hello(name=None):
     """Greet people who come to our web app and choose to say hello to us.
 
-    :param name: the name a person put in URL after "greeting/" ('GET' request)
+    :param name: the name a person put in URL after "hello/" ('GET' request)
     This page displays a web form asking a page visitor's name. If they submit
     a name, the personal greeting message along with some fun information is
     displayed, and also there appears a link with a text suggesting to hide
     the form and treat the visitor as a normal user. If the visitor clicks it,
-    they actually get redirected to /greeting/<name> page (via 'POST' request).
+    they actually get redirected to /hello/<name> page (via 'POST' request).
     We treat the visitor as "engaged" with our web app at this point and
     suggest them to register and become regular users.
     The code in this function also deals with some of the complexities of both
-    '/greeting/' and '/greeting/<name>' routes being accessible via 'GET' and
+    '/hello/' and '/hello/<name>' routes being accessible via 'GET' and
     'POST' requests.
     """
+
+    # This page is only for non logged-in visitors
+    if current_user.is_authenticated:
+        abort(404)
+
     # Context will be passed to the template for rendering
     context = {}
 
-    # The case when the URL ends in /greeting/<name>, where <name> is not empty
+    # The case when the URL ends in /hello/<name>, where <name> is not empty
     if name:
         # Use this <name> then, no need to have a form
         context["name"] = name
@@ -120,15 +132,15 @@ def greeting(name=None):
 
         # Also, remove the previous name (if it exists) from the session.
         #
-        # This happens when firstly user goes to /greeting and enters a name,
-        # then goes to /greeting/<name>, and then returns to /greeting.
+        # This happens when firstly user goes to /hello and enters a name,
+        # then goes to /hello/<name>, and then returns to /hello.
         #
         # So we need to make sure that in this case a user returning from
-        # /greeting/<name> to /greeting should be greeted as a stranger again.
+        # /hello/<name> to /hello should be greeted as a stranger again.
         session["name"] = None
         session["form_was_submitted"] = False
 
-    # The case when the URL ends in /greeting
+    # The case when the URL ends in /hello
     else:
         context["name"] = session.get("name")
 
@@ -148,13 +160,13 @@ def greeting(name=None):
                 flash("Looks like you have changed your name!")
 
             session["name"] = form.name.data
-            return redirect(url_for(".greeting"))
+            return redirect(url_for(".hello"))
 
     temperatures = [10, 15, 20, 25, 30]
 
     current_time = datetime.utcnow()
 
-    greeting_msgs = {
+    hello_msgs = {
         "morning": "Good morning!",
         "day": "Good afternoon!",
         "evening": "Good evening!",
@@ -169,14 +181,14 @@ def greeting(name=None):
     more_context = {
         "temperatures": temperatures,
         "current_time": current_time,
-        "greeting_msgs": greeting_msgs,
+        "hello_msgs": hello_msgs,
         "funny_msgs": funny_msgs,
     }
 
     context = {**context, **more_context}
 
     return render_template(
-        "greeting.html",
+        "hello.html",
         **context,
     )
 

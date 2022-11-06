@@ -2,8 +2,9 @@
 certifi==2022.9.24
 charset-normalizer==2.1.1
 commonmark==0.9.1
+coverage==6.5.0
 defusedxml==0.7.1
-Faker==15.1.1
+Faker==15.2.0
 httpie==3.2.1
 multidict==6.0.2
 Pygments==2.13.0

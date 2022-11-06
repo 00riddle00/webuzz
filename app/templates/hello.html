@@ -15,7 +15,7 @@
 
 {% if form and session["form_was_submitted"] %}
     <div style="float: right; margin-top: -60px;">
-        <form action="{{ url_for('main.greeting', name=session['name']) }}" method="post">
+        <form action="{{ url_for('main.hello', name=session['name']) }}" method="post">
             <button style="padding: 0; border: none; background: none; text-decoration-line: none;" type="submit" name="clear_form" value="submit" class="btn-link">
             Get this form out of my face and treat me as a normal user!
             </button>
@@ -24,8 +24,8 @@
 {% endif %}
 
 {% if name %}
-    {% if greeting_msgs %}
-        <p>Welcome! {{ greeting_msgs["day"] }}</p>
+    {% if hello_msgs %}
+        <p>Welcome! {{ hello_msgs["day"] }}</p>
     {% endif %}
 
     {% if current_time %}

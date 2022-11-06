@@ -1,3 +1,4 @@
+from flask import current_app
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
@@ -23,6 +24,11 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        with current_app.app_context():
+            self.passwd_min_len = current_app.config["PASSWORD_MIN_LENGTH"]
+
     email = StringField(
         "Email", validators=[DataRequired(), Length(1, 64), Email()]
     )
@@ -56,6 +62,12 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError("Username already in use.")
+
+    def validate_password(self, field):
+        if len(field.data) < self.passwd_min_len:
+            raise ValidationError(
+                f"Password minimum length should be at least {self.passwd_min_len} characters"
+            )
 
 
 class ChangePasswordForm(FlaskForm):

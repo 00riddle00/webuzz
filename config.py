@@ -38,7 +38,8 @@ class Config:
     POSTS_PER_PAGE = 20
     COMMENTS_PER_PAGE = 30
     FOLLOWERS_PER_PAGE = 50
-    LOW_DB_QUERY_TIME = 0.5
+    SLOW_DB_QUERY_TIME = 0.5
+    PASSWORD_MIN_LENGTH = 4
 
     @staticmethod
     def init_app(app):
