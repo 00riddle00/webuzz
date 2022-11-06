@@ -42,9 +42,9 @@ class SeleniumTestCase(unittest.TestCase):
             # add an administrator user
             admin_role = Role.query.filter_by(name="Administrator").first()
             admin = User(
-                email="john@example.com",
-                username="john",
-                password="cat",
+                email="flask.4dmin@yahoo.com",
+                username="4dministrator",
+                password="admin",
                 role=admin_role,
                 confirmed=True,
             )
@@ -94,11 +94,11 @@ class SeleniumTestCase(unittest.TestCase):
         self.assertIn("<h1>Login</h1>", self.client.page_source)
 
         # login
-        self.client.find_element("name", "email").send_keys("john@example.com")
-        self.client.find_element("name", "password").send_keys("cat")
+        self.client.find_element("name", "email").send_keys("flask.4dmin@yahoo.com")
+        self.client.find_element("name", "password").send_keys("admin")
         self.client.find_element("name", "submit").click()
-        self.assertTrue(re.search("Hello,\s+john!", self.client.page_source))
+        self.assertTrue(re.search("Hello,\s+4dministrator!", self.client.page_source))
 
         # navigate to the user's profile page
         self.client.find_element("link text", "Profile").click()
-        self.assertIn("<h1>john</h1>", self.client.page_source)
+        self.assertIn("<h1>4dministrator</h1>", self.client.page_source)
