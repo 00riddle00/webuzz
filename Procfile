@@ -1,1 +1,1 @@
-web: waitress-serve --port=$PORT webuzz:app
+web: gunicorn webuzz:app
