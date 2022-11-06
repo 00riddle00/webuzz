@@ -90,15 +90,15 @@ class SeleniumTestCase(unittest.TestCase):
         )
 
         # navigate to login page
-        self.client.find_element_by_link_text("Log In").click()
+        self.client.find_element("link text", "Log In").click()
         self.assertIn("<h1>Login</h1>", self.client.page_source)
 
         # login
-        self.client.find_element_by_name("email").send_keys("john@example.com")
-        self.client.find_element_by_name("password").send_keys("cat")
-        self.client.find_element_by_name("submit").click()
+        self.client.find_element("name", "email").send_keys("john@example.com")
+        self.client.find_element("name", "password").send_keys("cat")
+        self.client.find_element("name", "submit").click()
         self.assertTrue(re.search("Hello,\s+john!", self.client.page_source))
 
         # navigate to the user's profile page
-        self.client.find_element_by_link_text("Profile").click()
+        self.client.find_element("link text", "Profile").click()
         self.assertIn("<h1>john</h1>", self.client.page_source)
