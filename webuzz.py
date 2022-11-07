@@ -14,8 +14,14 @@ if os.path.exists(dotenv_path):
     # take environment variables from .env file
     load_dotenv(dotenv_path)
 
+FLASK_COVERAGE = os.environ.get("FLASK_COVERAGE", "false").lower() in [
+    "true",
+    "on",
+    "1",
+]
+
 COV = None
-if os.environ.get("FLASK_COVERAGE"):
+if FLASK_COVERAGE:
     import coverage
 
     COV = coverage.coverage(branch=True, include="app/*")
@@ -81,15 +87,23 @@ def test(coverage, test_names):
 
 
 @app.cli.command()
-@click.option('--length', default=25,
-    help='Number of functions to include in the profiler report.')
-@click.option('--profile-dir', default=None,
-    help='Directory where profiler data files are saved.')
+@click.option(
+    "--length",
+    default=25,
+    help="Number of functions to include in the profiler report.",
+)
+@click.option(
+    "--profile-dir",
+    default=None,
+    help="Directory where profiler data files are saved.",
+)
 def profile(length, profile_dir):
     """Start the application under the code profiler."""
     from werkzeug.contrib.profiler import ProfilerMiddleware
-    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[length],
-        profile_dir=profile_dir)
+
+    app.wsgi_app = ProfilerMiddleware(
+        app.wsgi_app, restrictions=[length], profile_dir=profile_dir
+    )
     app.run()
 
 
