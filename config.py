@@ -123,6 +123,11 @@ class UnixConfig(ProductionConfig):
 
 
 class HerokuConfig(ProductionConfig):
+    
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "HEROKU_DATABASE_URL"
+    ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
+
     SSL_REDIRECT = True if os.environ.get("DYNO") else False
 
     @classmethod
