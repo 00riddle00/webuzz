@@ -1,6 +1,6 @@
 version: '3'
 services:
-  flasky:
+  webuzz:
     build: .
     ports:
       - "8000:5000"
