@@ -26,6 +26,31 @@ class EditProfileForm(FlaskForm):
     name = StringField("Real name", validators=[Length(0, 64)])
     location = StringField("Location", validators=[Length(0, 64)])
     about_me = TextAreaField("About me")
+    default_gravatar = SelectField(
+        "Default Gravatar",
+        choices=[
+            (
+                "identicon",
+                "identicon: a geometric pattern based on an email hash",
+            ),
+            (
+                "monsterid",
+                "monsterid: a generated 'monster' with different colors, faces, etc",
+            ),
+            (
+                "wavatar",
+                "wavatar: generated faces with differing features and backgrounds",
+            ),
+            (
+                "retro",
+                "retro: awesome generated, 8-bit arcade-style pixelated faces",
+            ),
+            (
+                "robohash",
+                "robohash: a generated robot with different colors, faces, etc",
+            ),
+        ],
+    )
     submit = SubmitField("Submit")
 
 

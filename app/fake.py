@@ -1,4 +1,4 @@
-from random import randint
+from random import choice, randint
 
 from faker import Faker
 from sqlalchemy.exc import IntegrityError
@@ -20,6 +20,9 @@ def users(count=100):
             location=fake.city(),
             about_me=fake.text(),
             member_since=fake.past_date(),
+            default_gravatar=choice(
+                ["identicon", "monsterid", "wavatar", "retro", "robohash"]
+            ),
         )
         db.session.add(u)
         try:

@@ -120,6 +120,7 @@ class User(UserMixin, db.Model):
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     avatar_hash = db.Column(db.String(32))
+    default_gravatar = db.Column(db.String(16))
     # ----------------------------------
     posts = db.relationship("Post", backref="author", lazy="dynamic")
     followed = db.relationship(
@@ -146,6 +147,14 @@ class User(UserMixin, db.Model):
                 db.session.add(user)
                 db.session.commit()
 
+    @staticmethod
+    def add_default_gravatar():
+        for user in User.query.all():
+            if not user.default_gravatar:
+                user.default_gravatar = current_app.config["DEFAULT_GRAVATAR"]
+                db.session.add(user)
+                db.session.commit()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         if self.role is None:
@@ -155,6 +164,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = self.gravatar_hash()
+            self.default_gravatar = current_app.config["DEFAULT_GRAVATAR"]
         self.follow(self)
 
     @property
@@ -246,10 +256,10 @@ class User(UserMixin, db.Model):
     def gravatar_hash(self):
         return hashlib.md5(self.email.lower().encode("utf-8")).hexdigest()
 
-    def gravatar(self, size=100, default="identicon", rating="g"):
+    def gravatar(self, size=100, rating="g"):
         url = "https://secure.gravatar.com/avatar"
         hash = self.avatar_hash or self.gravatar_hash()
-        return f"{url}/{hash}?s={size}&d={default}&r={rating}"
+        return f"{url}/{hash}?s={size}&d={self.default_gravatar}&r={rating}"
 
     def follow(self, user):
         if not self.is_following(user):
