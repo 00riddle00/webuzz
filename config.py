@@ -34,11 +34,12 @@ class Config:
     MAIL_SENDER_EMAIL = os.environ.get("MAIL_SENDER_EMAIL")
     MAIL_SENDER = f"{APP_NAME} HQ <{MAIL_SENDER_EMAIL}>"
     ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL")
+    SSL_REDIRECT = False
     POSTS_PER_PAGE = 20
     COMMENTS_PER_PAGE = 30
     FOLLOWERS_PER_PAGE = 50
     SLOW_DB_QUERY_TIME = 0.5
-    PASSWORD_MIN_LENGTH = 4
+    PASSWORD_MIN_LENGTH = 3
 
     @staticmethod
     def init_app(app):
@@ -59,6 +60,7 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = (
         os.environ.get("TEST_DATABASE_URL") or "sqlite://"
     )
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(Config):
@@ -68,8 +70,8 @@ class ProductionConfig(Config):
 
     @classmethod
     def init_app(cls, app):
+        """Send email of error to admin email."""
         Config.init_app(app)
-        """Sends email of error to admin email."""
 
         import logging
         from logging.handlers import SMTPHandler
@@ -82,9 +84,9 @@ class ProductionConfig(Config):
                 secure = ()
         mail_handler = SMTPHandler(
             mailhost=(cls.MAIL_SERVER, cls.MAIL_PORT),
-            fromaddr=cls.FLASKY_MAIL_SENDER,
-            toaddrs=[cls.FLASKY_ADMIN],
-            subject=cls.FLASKY_MAIL_SUBJECT_PREFIX + " Application Error",
+            fromaddr=cls.MAIL_SENDER,
+            toaddrs=[cls.ADMIN_EMAIL],
+            subject=cls.MAIL_SUBJECT_PREFIX + " Application Error",
             credentials=credentials,
             secure=secure,
         )
@@ -92,9 +94,68 @@ class ProductionConfig(Config):
         app.logger.addHandler(mail_handler)
 
 
+class DockerConfig(ProductionConfig):
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        # log to stderr
+        import logging
+        from logging import StreamHandler
+
+        file_handler = StreamHandler()
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+
+
+class UnixConfig(ProductionConfig):
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        # log to syslog
+        import logging
+        from logging.handlers import SysLogHandler
+
+        syslog_handler = SysLogHandler()
+        syslog_handler.setLevel(logging.INFO)
+        app.logger.addHandler(syslog_handler)
+
+
+class HerokuConfig(ProductionConfig):
+    
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "HEROKU_DATABASE_URL"
+    ) or "sqlite:///" + os.path.join(basedir, "data.sqlite")
+
+    SSL_REDIRECT = True if os.environ.get("DYNO") else False
+
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        # handle reverse proxy server headers
+        try:
+            from werkzeug.middleware.proxy_fix import ProxyFix
+        except ImportError:
+            from werkzeug.contrib.fixers import ProxyFix
+        app.wsgi_app = ProxyFix(app.wsgi_app)
+
+        # log to stderr
+        import logging
+        from logging import StreamHandler
+
+        file_handler = StreamHandler()
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+
+
 config = {
     "development": DevelopmentConfig,
     "testing": TestingConfig,
     "production": ProductionConfig,
+    'heroku': HerokuConfig,
+    "docker": DockerConfig,
+    "unix": UnixConfig,
     "default": DevelopmentConfig,
 }
