@@ -150,7 +150,7 @@ class User(UserMixin, db.Model):
     @staticmethod
     def add_default_gravatar():
         for user in User.query.all():
-            if not user.default_gravatar:
+            if user.default_gravatar is None:
                 user.default_gravatar = current_app.config["DEFAULT_GRAVATAR"]
                 db.session.add(user)
                 db.session.commit()
@@ -164,7 +164,8 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(default=True).first()
         if self.email is not None and self.avatar_hash is None:
             self.avatar_hash = self.gravatar_hash()
-            self.default_gravatar = current_app.config["DEFAULT_GRAVATAR"]
+            if self.default_gravatar is None:
+                self.default_gravatar = current_app.config["DEFAULT_GRAVATAR"]
         self.follow(self)
 
     @property
