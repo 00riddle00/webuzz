@@ -40,6 +40,7 @@ class Config:
     FOLLOWERS_PER_PAGE = 50
     SLOW_DB_QUERY_TIME = 0.5
     PASSWORD_MIN_LENGTH = 3
+    DEFAULT_GRAVATAR = "identicon"
 
     @staticmethod
     def init_app(app):

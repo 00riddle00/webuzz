@@ -122,3 +122,6 @@ def deploy():
 
     # ensure all users are following themselves
     User.add_self_follows()
+
+    # ensure all users have default gravatar set
+    User.add_default_gravatar()

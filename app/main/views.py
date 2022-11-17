@@ -230,6 +230,7 @@ def edit_profile():
         current_user.name = form.name.data
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
+        current_user.default_gravatar = form.default_gravatar.data
         db.session.add(current_user._get_current_object())
         db.session.commit()
         flash("Your profile has been updated.")
