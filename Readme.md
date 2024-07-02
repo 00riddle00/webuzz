@@ -7,7 +7,7 @@
 #### Create virtual environment in project's root directory:
 
 ```Shell
-python -m venv venv
+python3.11 -m venv venv
 ```
 
 #### Activate the virtual environment:
@@ -29,16 +29,18 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-## Running
+## Setting environment variables
 
-##### [1] Set the environment variables:
+##### Set these variables:
 
 ```Shell
 export FLASK_APP=webuzz
 export FLASK_DEBUG=1
 ```
 
-##### [2] Run the development server:
+## Running
+
+##### Run the development server:
 ```Shell
 flask run
 ```
@@ -46,6 +48,136 @@ flask run
 ```Shell
 flask --app webuzz --debug run
 ```
+
+## Using
+
+In the [data-dev.sqlite](data-dev.sqlite) database (which is in this Git repo) there are already many "fake" users
+as well as four "real" users with the following credentials:
+
+* email: `flask.user@yahoo.com`
+* username: `user`
+* password: `user`
+
+
+* email: `flask.moderator@yahoo.com`
+* username: `moderator`
+* password: `moderator`
+
+
+* email: `flask.4dmin@yahoo.com`
+* username: `4dministrator`
+* password: `admin`
+
+
+* email: `tomasgiedraitis@gmail.com`
+* username: `riddle`
+* password: `tomas`
+
+## Running with a new database:
+* Complete the [Installation](#Installation) and [Setting environment variables](#Setting-environment-variables) steps
+  above.
+* Remove the existing [data-dev.sqlite](data-dev.sqlite) file
+* Remove the [migrations](migrations) directoty
+* Run the following commands:
+  ```Shell
+  flask db init
+  flask db migrate -m 'initial migration'
+  flask db upgrade
+  ```
+* Enter the Flask Shell:
+  ```Shell
+  flask shell
+  ```
+* Enter these commands inside the shell (possibly modifying them to your needs):
+  ```python
+  from datetime import datetime
+  from app import fake
+
+  Role.insert_roles()
+
+  fake.users(100)
+  fake.posts(100)
+
+  user_role = Role.query.filter_by(name="User").first()
+  moderator_role = Role.query.filter_by(name="Moderator").first()
+  admin_role = Role.query.filter_by(name="Administrator").first()
+
+  user = User(
+      email='flask.user@yahoo.com',
+      username='user',
+      password='user',
+      confirmed=1,
+      role=user_role,
+      name='User',
+      location='SQLite database file',
+      about_me='\
+  I am a User, my whole purpose of existence is \
+  to be an example of a user account.',
+      member_since=datetime.utcnow(),
+  )
+
+  moderator = User(
+      email='flask.moderator@yahoo.com',
+      username='moderator',
+      password='moderator',
+      confirmed=1,
+      role=moderator_role,
+      name='Moderator',
+      location='SQLite database file',
+      about_me='\
+  I am a Moderator, my whole purpose of existence is \
+  to be an example of a moderator account.',
+      member_since=datetime.utcnow(),
+  )
+
+  admin = User(
+      email='flask.4dmin@yahoo.com',
+      username='4dministrator',
+      password='admin',
+      confirmed=1,
+      role=admin_role,
+      name='Administrator',
+      location='SQLite database file',
+      about_me='\
+  I am an Administrator, my whole purpose of existence is \
+  to be an example of an admin account.',
+      member_since=datetime.utcnow(),
+  )
+
+  tomas = User(
+      email='tomasgiedraitis@gmail.com',
+      username='riddle',
+      password='tomas',
+      confirmed=1,
+      role=user_role,
+      name='Tomas',
+      location='Vilnius',
+      about_me='I am a human.',
+      member_since=datetime.utcnow(),
+  )
+
+  post_by_tomas = Post(
+      body='Hello, this is my first blog post!',
+      timestamp=datetime.utcnow(),
+      author=tomas,
+  )
+
+  db.session.add(user)
+  db.session.add(moderator)
+  db.session.add(admin)
+  db.session.add(tomas)
+  db.session.add(post_by_tomas)
+  db.session.commit()
+  exit()
+  ```
+* Run the development server:
+  ```Shell
+  flask run
+  ```
+* Alternative without setting environment variables:
+  ```Shell
+  flask --app webuzz --debug run
+  ```
 
 ## Software dependencies
 
