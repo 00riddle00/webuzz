@@ -57,17 +57,17 @@ as well as four "real" users with the following credentials:
 * email: `flask.user@yahoo.com`
 * username: `user`
 * password: `user`
-
+<br>
 
 * email: `flask.moderator@yahoo.com`
 * username: `moderator`
 * password: `moderator`
-
+<br>
 
 * email: `flask.4dmin@yahoo.com`
 * username: `4dministrator`
 * password: `admin`
-
+<br>
 
 * email: `tomasgiedraitis@gmail.com`
 * username: `riddle`
@@ -77,7 +77,7 @@ as well as four "real" users with the following credentials:
 * Complete the [Installation](#Installation) and [Setting environment variables](#Setting-environment-variables) steps
   above.
 * Remove the existing [data-dev.sqlite](data-dev.sqlite) file
-* Remove the [migrations](migrations) directoty
+* Remove the [migrations](migrations) directory
 * Run the following commands:
   ```Shell
   flask db init
