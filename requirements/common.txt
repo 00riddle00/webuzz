@@ -1,6 +1,5 @@
 alembic==1.8.1
 astroid==2.12.12
-black==22.10.0
 bleach==5.0.1
 blinker==1.5
 Bootstrap-Flask==2.1.0
@@ -29,7 +28,7 @@ Markdown==3.4.1
 MarkupSafe==2.1.1
 mccabe==0.7.0
 mypy-extensions==0.4.3
-packaging==21.3
+packaging==22.0
 pathspec==0.10.1
 platformdirs==2.5.2
 pydocstyle==6.1.1
