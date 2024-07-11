@@ -1,0 +1,68 @@
+// Use DBML to define your database structure
+// Diagram builder: https://dbdiagram.io/
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table users {
+  id integer [primary key]
+  email varchar
+  username varchar
+  role_id integer
+  password_hash varchar
+  confirmed bool
+  // --------- for user profile ---------
+  name varchar
+  location varchar
+  about_me varchar
+  member_since datetime
+  last_seen datetime
+  avatar_hash varchar
+  default_gravatar varchar
+}
+
+Table roles {
+  id integer [primary key]
+  name varchar
+  default bool
+  permissions integer
+}
+
+Table posts {
+  id integer [primary key]
+  body varchar
+  body_html varchar
+  timestamp datetime
+  author_id integer
+}
+
+Table comments {
+  id integer [primary key]
+  body varchar
+  body_html varchavarchar
+  timestamp datetime
+  disabled bool
+  author_id integer
+  post_id integer
+}
+
+// "follows" association table realizes a many-to-many
+// relationship between "users" table and itself.
+Table follows {
+  follower_id integer
+  followed_id integer
+  timestamp datetime
+}
+
+Ref: roles.id < users.role_id // one-to-many
+
+Ref: users.id < posts.author_id // one-to-many
+
+Ref: users.id < comments.author_id // one-to-many
+
+Ref: posts.id < comments.post_id // one-to-many
+
+// "follows" association table realizes a many-to-many
+// relationship between "users" table and itself.
+// Many-to-many relationship is realized via two
+// one-to-many relationships:
+Ref: users.id < follows.follower_id // one-to-many
+Ref: users.id < follows.followed_id // one-to-many
